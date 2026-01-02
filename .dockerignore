@@ -1,0 +1,20 @@
+# dependencies
+node_modules
+
+# local database / volumes
+postgres-data
+*.sql
+
+# env files (optional – recommended for prod)
+.env
+
+# git
+.git
+.gitignore
+
+# logs
+npm-debug.log
+yarn-error.log
+
+# OS junk
+.DS_Store
