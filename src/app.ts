@@ -7,19 +7,19 @@ import passport from 'passport';
 import swaggerUi from 'swagger-ui-express';
 import { container } from 'tsyringe';
 
-import { env } from './config/env';
-import { swaggerSpec } from './config/swagger';
+import { env } from './config/env.config';
+import { swaggerSpec } from './config/swagger.config';
 import { jwtStrategy } from './components/auth/strategies/jwt.strategy';
 
 // Middleware
 import { errorHandler, notFoundHandler } from './shared/middleware/error.middleware';
-import { rateLimiter } from './shared/middleware/rateLimiter.middleware';
-import { logger } from './shared/utils/logger';
+import { rateLimiter } from './shared/middleware/rate-limit.middleware';
+import { logger } from './shared/utils/logger.util';
 
 // Routes
 import authRoutes from './components/auth/auth.routes';
-import userRoutes from './components/user/user.routes';
-import productRoutes from './components/product/product.routes';
+// import userRoutes from './components/user/user.routes';
+// import productRoutes from './components/product/product.routes';
 
 // Register dependencies
 import './shared/di/container';
@@ -70,8 +70,8 @@ export const createApp = (): Application => {
 
   // API Routes
   app.use(`${env.API_PREFIX}/auth`, authRoutes);
-  app.use(`${env.API_PREFIX}/users`, userRoutes);
-  app.use(`${env.API_PREFIX}/products`, productRoutes);
+  // app.use(`${env.API_PREFIX}/users`, userRoutes);
+  // app.use(`${env.API_PREFIX}/products`, productRoutes);
 
   // Error handling
   app.use(notFoundHandler);

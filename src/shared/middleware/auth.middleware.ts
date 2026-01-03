@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import passport from 'passport';
-import { UnauthorizedError, ForbiddenError } from '../errors/AppError';
+import { UnauthorizedError, ForbiddenError } from '../errors/app-error';
 
 export const authenticate = (req: Request, res: Response, next: NextFunction): void => {
   passport.authenticate('jwt', { session: false }, (err: any, user: any, info: any) => {

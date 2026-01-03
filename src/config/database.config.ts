@@ -24,3 +24,12 @@ export const initializeDatabase = async (): Promise<void> => {
     throw error;
   }
 };
+
+export const disconnectDatabase = async (): Promise<void> => {
+  try {
+    await AppDataSource.destroy();
+    console.log('✅ Database disconnected successfully');
+  } catch (error) {
+    console.error('❌ Database disconnection failed:', error);
+  }
+};

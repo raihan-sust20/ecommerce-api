@@ -1,8 +1,8 @@
 import { createApp } from './app';
-import { env } from './config/env';
-import { logger } from './shared/utils/logger';
-import { initializeDatabase } from './config/database';
-import { initializeRedis } from './config/redis';
+import { env } from './config/env.config';
+import { logger } from './shared/utils/logger.util';
+import { initializeDatabase } from './config/database.config';
+import { initializeRedis } from './config/redis.config';
 
 const startServer = async (): Promise<void> => {
   try {

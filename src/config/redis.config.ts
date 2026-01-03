@@ -1,6 +1,6 @@
 import { createClient } from 'redis';
-import { env } from './env';
-import { logger } from '../shared/utils/logger';
+import { env } from './env.config';
+import { logger } from '../shared/utils/logger.util';
 
 export const redisClient = createClient({
   socket: {
@@ -19,5 +19,13 @@ export const initializeRedis = async (): Promise<void> => {
   } catch (error) {
     logger.error('❌ Redis connection failed:', error);
     throw error;
+  }
+};
+
+export const disconnectRedis = async (): Promise<void> => {
+  try {
+    redisClient.destroy();
+  } catch (error) {
+    logger.error('❌ Redis disconnection failed:', error);
   }
 };

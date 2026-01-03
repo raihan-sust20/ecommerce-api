@@ -25,12 +25,7 @@ export class ResponseUtil {
     res.status(204).send();
   }
 
-  static error(
-    res: Response,
-    message: string,
-    statusCode = 500,
-    errors?: any
-  ): void {
+  static error(res: Response, message: string, statusCode = 400, errors?: any): void {
     const response: ApiResponse = {
       success: false,
       message,

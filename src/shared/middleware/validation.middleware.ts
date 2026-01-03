@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
-import { plainToClass } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import { validate, ValidationError as ClassValidatorError } from 'class-validator';
-import { ValidationError } from '../errors/AppError';
+import { ValidationError } from '../errors/app-error';
 
 export const validateDto = (dtoClass: any) => {
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const dtoInstance = plainToClass(dtoClass, req.body);
+      const dtoInstance = plainToInstance(dtoClass, req.body);
       const errors = await validate(dtoInstance);
 
       if (errors.length > 0) {
