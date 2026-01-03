@@ -1,49 +1,114 @@
+// env.schema.ts
+import 'reflect-metadata';
+import { plainToInstance, Transform } from 'class-transformer';
+import {
+  IsEnum,
+  IsIn,
+  IsInt,
+  IsOptional,
+  IsString,
+  MinLength,
+  validateSync,
+} from 'class-validator';
 import { config } from 'dotenv';
-import { z } from 'zod';
+import { formatValidationErrors } from '../shared/middleware/validation.middleware';
+
+export type NodeEnv = 'development' | 'production' | 'test';
+
+export type LogLevel = 'error' | 'warn' | 'info' | 'debug';
+
+export class EnvironmentVariables {
+  @IsIn(['development', 'production', 'test'])
+  NODE_ENV: NodeEnv = 'development';
+
+  @IsInt()
+  @Transform(({ value }) => Number(value))
+  PORT = 5001;
+
+  // Database
+  @IsString()
+  DB_HOST!: string;
+
+  @IsInt()
+  @Transform(({ value }) => Number(value))
+  DB_PORT!: number;
+
+  @IsString()
+  DB_USERNAME!: string;
+
+  @IsString()
+  DB_PASSWORD!: string;
+
+  @IsString()
+  DB_DATABASE!: string;
+
+  // Redis
+  @IsString()
+  REDIS_HOST!: string;
+
+  @IsInt()
+  @Transform(({ value }) => Number(value))
+  REDIS_PORT!: number;
+
+  @IsOptional()
+  @IsString()
+  REDIS_PASSWORD?: string;
+
+  // JWT
+  @IsString()
+  @MinLength(32)
+  JWT_SECRET!: string;
+
+  @IsString()
+  JWT_EXPIRES_IN = '7d';
+
+  @IsString()
+  @MinLength(32)
+  JWT_REFRESH_SECRET!: string;
+
+  @IsString()
+  JWT_REFRESH_EXPIRES_IN = '30d';
+
+  // API
+  @IsString()
+  API_PREFIX = '/api/v1';
+
+  @IsInt()
+  @Transform(({ value }) => Number(value))
+  RATE_LIMIT_WINDOW_MS = 900_000;
+
+  @IsInt()
+  @Transform(({ value }) => Number(value))
+  RATE_LIMIT_MAX = 100;
+
+  // CORS
+  @IsString()
+  CORS_ORIGIN = '*';
+
+  // Logging
+  @IsIn(['error', 'warn', 'info', 'debug'])
+  LOG_LEVEL: LogLevel = 'info';
+}
 
 config();
 
-const envSchema = z.object({
-  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
-  PORT: z.string().transform(Number).default('3000'),
-  
-  // Database
-  DB_HOST: z.string(),
-  DB_PORT: z.string().transform(Number),
-  DB_USERNAME: z.string(),
-  DB_PASSWORD: z.string(),
-  DB_DATABASE: z.string(),
-  
-  // Redis
-  REDIS_HOST: z.string(),
-  REDIS_PORT: z.string().transform(Number),
-  REDIS_PASSWORD: z.string().optional(),
-  
-  // JWT
-  JWT_SECRET: z.string().min(32),
-  JWT_EXPIRES_IN: z.string().default('7d'),
-  JWT_REFRESH_SECRET: z.string().min(32),
-  JWT_REFRESH_EXPIRES_IN: z.string().default('30d'),
-  
-  // API
-  API_PREFIX: z.string().default('/api/v1'),
-  RATE_LIMIT_WINDOW_MS: z.string().transform(Number).default('900000'),
-  RATE_LIMIT_MAX: z.string().transform(Number).default('100'),
-  
-  // CORS
-  CORS_ORIGIN: z.string().default('*'),
-  
-  // Logging
-  LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
-});
+const validateEnv = (): EnvironmentVariables => {
+  const env = plainToInstance(EnvironmentVariables, process.env, {
+    enableImplicitConversion: true,
+  });
 
-const validateEnv = () => {
-  try {
-    return envSchema.parse(process.env);
-  } catch (error) {
-    console.error('❌ Invalid environment variables:', error);
+  const errors = validateSync(env, {
+    skipMissingProperties: false,
+  });
+
+  if (errors.length > 0) {
+    console.error('❌ Invalid environment variables:');
+    const formatedErrors = formatValidationErrors(errors);
+    console.error(formatedErrors);
     process.exit(1);
   }
+
+  return env;
 };
 
 export const env = validateEnv();

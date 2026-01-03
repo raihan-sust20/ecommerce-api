@@ -1,5 +1,5 @@
 import { container } from 'tsyringe';
-// import { UserRepository } from '../../components/user/user.repository';
+import { UserRepository } from '../../components/user/repositories/user.repository';
 // import { UserService } from '../../components/user/user.service';
 // import { UserController } from '../../components/user/user.controller';
 import { AuthService } from '../../components/auth/auth.service';
@@ -9,7 +9,7 @@ import { AuthController } from '../../components/auth/auth.controller';
 // import { ProductController } from '../../components/product/product.controller';
 
 // Register all dependencies
-// container.registerSingleton(UserRepository);
+container.registerSingleton(UserRepository);
 // container.registerSingleton(UserService);
 // container.registerSingleton(UserController);
 

@@ -22,7 +22,7 @@ export const validateDto = (dtoClass: any) => {
   };
 };
 
-const formatValidationErrors = (errors: ClassValidatorError[]): string => {
+export const formatValidationErrors = (errors: ClassValidatorError[]): string => {
   return errors
     .map((error) => {
       const constraints = error.constraints;

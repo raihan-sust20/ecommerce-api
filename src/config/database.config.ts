@@ -10,8 +10,18 @@ export const AppDataSource = new DataSource({
   database: env.DB_DATABASE,
   synchronize: env.NODE_ENV === 'development',
   logging: env.NODE_ENV === 'development',
-  entities: ['src/components/**/entities/*.entity.ts'],
-  migrations: ['src/database/migrations/*.ts'],
+  // entities: ['src/components/**/entities/*.entity.ts'],
+  // migrations: ['src/database/migrations/*.ts'],
+  entities: [
+    env.NODE_ENV === 'production'
+      ? 'dist/components/**/entities/*.entity.js'
+      : 'src/components/**/entities/*.entity.ts',
+  ],
+  migrations: [
+    env.NODE_ENV === 'production'
+      ? 'dist/database/migrations/*.js'
+      : 'src/database/migrations/*.ts',
+  ],
   subscribers: [],
 });
 

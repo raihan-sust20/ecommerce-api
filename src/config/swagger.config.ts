@@ -15,7 +15,7 @@ const options: swaggerJsdoc.Options = {
     },
     servers: [
       {
-        url: `http://localhost:${env.PORT}${env.API_PREFIX}`,
+        url: `http://localhost:${env.PORT}`,
         description: 'Development server',
       },
     ],

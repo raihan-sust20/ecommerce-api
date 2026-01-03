@@ -9,7 +9,7 @@ import { container } from 'tsyringe';
 
 import { env } from './config/env.config';
 import { swaggerSpec } from './config/swagger.config';
-import { jwtStrategy } from './components/auth/strategies/jwt.strategy';
+// import { jwtStrategy } from './components/auth/strategies/jwt.strategy';
 
 // Middleware
 import { errorHandler, notFoundHandler } from './shared/middleware/error.middleware';
@@ -47,7 +47,7 @@ export const createApp = (): Application => {
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
   // Passport
-  passport.use(jwtStrategy);
+  // passport.use(jwtStrategy);
   app.use(passport.initialize());
 
   // Request logging
