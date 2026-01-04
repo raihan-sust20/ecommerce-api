@@ -10,6 +10,9 @@ import { AuthController } from '../../components/auth/auth.controller';
 import { CategoryRepository } from '../../components/category/repositories/category.repository';
 import { CategoryService } from '../../components/category/category.service';
 import { CategoryController } from '../../components/category/category.controller';
+import { ProductRepository } from '../../components/product/repositories/product.repository';
+import { ProductService } from '../../components/product/product.service';
+import { ProductController } from '../../components/product/product.controller';
 
 
 // Register all dependencies
@@ -20,9 +23,9 @@ container.registerSingleton(UserRepository);
 container.registerSingleton(AuthService);
 container.registerSingleton(AuthController);
 
-// container.registerSingleton(ProductRepository);
-// container.registerSingleton(ProductService);
-// container.registerSingleton(ProductController);
+container.registerSingleton(ProductRepository);
+container.registerSingleton(ProductService);
+container.registerSingleton(ProductController);
 
 container.registerSingleton(CategoryRepository);
 container.registerSingleton(CategoryService);

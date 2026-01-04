@@ -19,7 +19,7 @@ import { logger } from './shared/utils/logger.util';
 // Routes
 import authRoutes from './components/auth/auth.routes';
 // import userRoutes from './components/user/user.routes';
-// import productRoutes from './components/product/product.routes';
+import productRoutes from './components/product/product.routes';
 import categoryRoutes from './components/category/category.routes';
 
 // Register dependencies
@@ -73,7 +73,7 @@ export const createApp = (): Application => {
   // API Routes
   app.use(`${env.API_PREFIX}/auth`, authRoutes);
   // app.use(`${env.API_PREFIX}/users`, userRoutes);
-  // app.use(`${env.API_PREFIX}/products`, productRoutes);
+  app.use(`${env.API_PREFIX}/products`, productRoutes);
   app.use(`${env.API_PREFIX}/categories`, categoryRoutes);
   
 

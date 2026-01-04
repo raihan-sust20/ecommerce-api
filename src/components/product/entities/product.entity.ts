@@ -20,11 +20,11 @@ export class Product {
   id: string;
 
   @Column()
-  @Index({ unique: true })
+  @Index('product_slug_index')
   sku: string;
 
   @Column()
-  @Index()
+  @Index('product_name_index')
   name: string;
 
   @Column({ name: 'text' })
