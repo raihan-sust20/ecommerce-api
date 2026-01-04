@@ -5,7 +5,7 @@ import cors from 'cors';
 import compression from 'compression';
 import passport from 'passport';
 import swaggerUi from 'swagger-ui-express';
-import { container } from 'tsyringe';
+
 
 import { env } from './config/env.config';
 import { swaggerSpec } from './config/swagger.config';
@@ -20,9 +20,11 @@ import { logger } from './shared/utils/logger.util';
 import authRoutes from './components/auth/auth.routes';
 // import userRoutes from './components/user/user.routes';
 // import productRoutes from './components/product/product.routes';
+import categoryRoutes from './components/category/category.routes';
 
 // Register dependencies
 import './shared/di/container';
+import { jwtStrategy } from './components/auth/strategies/jwt.strategy';
 
 export const createApp = (): Application => {
   const app = express();
@@ -47,7 +49,7 @@ export const createApp = (): Application => {
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
   // Passport
-  // passport.use(jwtStrategy);
+  passport.use(jwtStrategy);
   app.use(passport.initialize());
 
   // Request logging
@@ -72,6 +74,8 @@ export const createApp = (): Application => {
   app.use(`${env.API_PREFIX}/auth`, authRoutes);
   // app.use(`${env.API_PREFIX}/users`, userRoutes);
   // app.use(`${env.API_PREFIX}/products`, productRoutes);
+  app.use(`${env.API_PREFIX}/categories`, categoryRoutes);
+  
 
   // Error handling
   app.use(notFoundHandler);

@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   BeforeInsert,
   BeforeUpdate,
+  Index,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
@@ -17,15 +18,16 @@ export class User {
   id: string;
 
   @Column({ unique: true })
+  @Index('user_email_index')
   email: string;
 
   @Column()
   password: string;
 
-  @Column({ name: 'first_name'})
+  @Column({ name: 'first_name' })
   firstName: string;
 
-  @Column({ name: 'lst_name'})
+  @Column({ name: 'lst_name' })
   lastName: string;
 
   @Column({
@@ -34,13 +36,13 @@ export class User {
   })
   role: UserRole;
 
-  @Column({ default: true })
+  @Column({ name: 'is_active', default: true })
   isActive: boolean;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
   @BeforeInsert()
