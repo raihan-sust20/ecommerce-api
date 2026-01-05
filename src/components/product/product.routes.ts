@@ -529,45 +529,24 @@ router.get('/:id', productController.getProductById);
  *       ## Query Parameters
  *       
  *       ### Pagination Parameters
- *       - `page` (integer, optional): Page number starting from 1. Default: 1
- *       - `limit` (integer, optional): Number of items per page. Min: 1, Max: 100, Default: 10
+ *       - "page" (integer, optional): Page number starting from 1. Default: 1
+ *       - "limit" (integer, optional): Number of items per page. Min: 1, Max: 100, Default: 10
  *       
  *       ### Filter Parameters
- *       - `categoryId` (string, optional): UUID of category to filter by
- *       - `status` (enum, optional): Product status - either 'active' or 'inactive'
- *       - `search` (string, optional): Search term to match against product name, SKU, or description (case-insensitive)
- *       - `minPrice` (number, optional): Minimum price (inclusive). Must be >= 0
- *       - `maxPrice` (number, optional): Maximum price (inclusive). Must be >= 0
+ *       - "categoryId" (string, optional): UUID of category to filter by
+ *       - "status" (enum, optional): Product status - either 'active' or 'inactive'
+ *       - "search" (string, optional): Search term to match against product name, SKU, or description (case-insensitive)
+ *       - "minPrice" (number, optional): Minimum price (inclusive). Must be >= 0
+ *       - "maxPrice" (number, optional): Maximum price (inclusive). Must be >= 0
  *       
  *       ### Sorting Parameters
- *       - `sortBy` (enum, optional): Field to sort by. Options: 'name', 'price', 'stock', 'createdAt'. Default: 'createdAt'
- *       - `sortOrder` (enum, optional): Sort direction. Options: 'ASC' (ascending), 'DESC' (descending). Default: 'DESC'
+ *       - "sortBy" (enum, optional): Field to sort by. Options: 'name', 'price', 'stock', 'createdAt'. Default: 'createdAt'
+ *       - "sortOrder" (enum, optional): Sort direction. Options: 'ASC' (ascending), 'DESC' (descending). Default: 'DESC'
  *       
  *       ## Response Structure
  *       The response includes both the data array and pagination metadata:
- *       - `data`: Array of product objects with their categories
- *       - `pagination`: Object containing pagination information (page, limit, total, totalPages, hasNext, hasPrev)
- *       
- *       ## Examples
- *       
- *       ### Basic Usage
- *       - Get first page: `GET /api/v1/products`
- *       - Get page 2 with 20 items: `GET /api/v1/products?page=2&limit=20`
- *       
- *       ### Filtering
- *       - Active products only: `GET /api/v1/products?status=active`
- *       - Products in specific category: `GET /api/v1/products?categoryId=550e8400-e29b-41d4-a716-446655440000`
- *       - Price range $500-$1500: `GET /api/v1/products?minPrice=500&maxPrice=1500`
- *       
- *       ### Search
- *       - Search for "iPhone": `GET /api/v1/products?search=iphone`
- *       
- *       ### Sorting
- *       - Sort by price (low to high): `GET /api/v1/products?sortBy=price&sortOrder=ASC`
- *       - Sort by name alphabetically: `GET /api/v1/products?sortBy=name&sortOrder=ASC`
- *       
- *       ### Combined
- *       - Active electronics under $2000, sorted by price: `GET /api/v1/products?categoryId=xxx&status=active&maxPrice=2000&sortBy=price&sortOrder=ASC`
+ *       - "data": Array of product objects with their categories
+ *       - "pagination": Object containing pagination information (page, limit, total, totalPages, hasNext, hasPrev)
  *     
  *     parameters:
  *       - in: query

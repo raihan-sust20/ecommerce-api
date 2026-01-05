@@ -4,15 +4,15 @@ import { UserRepository } from '../../components/user/repositories/user.reposito
 // import { UserController } from '../../components/user/user.controller';
 import { AuthService } from '../../components/auth/auth.service';
 import { AuthController } from '../../components/auth/auth.controller';
-// import { ProductRepository } from '../../components/product/product.repository';
-// import { ProductService } from '../../components/product/product.service';
-// import { ProductController } from '../../components/product/product.controller';
 import { CategoryRepository } from '../../components/category/repositories/category.repository';
 import { CategoryService } from '../../components/category/category.service';
 import { CategoryController } from '../../components/category/category.controller';
 import { ProductRepository } from '../../components/product/repositories/product.repository';
 import { ProductService } from '../../components/product/product.service';
 import { ProductController } from '../../components/product/product.controller';
+import { OrderRepository } from '../../components/order/repositories/order.repository';
+import { OrderService } from '../../components/order/order.service';
+import { OrderController } from '../../components/order/order.controller';
 
 
 // Register all dependencies
@@ -30,5 +30,9 @@ container.registerSingleton(ProductController);
 container.registerSingleton(CategoryRepository);
 container.registerSingleton(CategoryService);
 container.registerSingleton(CategoryController);
+
+container.registerSingleton(OrderRepository);
+container.registerSingleton(OrderService);
+container.registerSingleton(OrderController);
 
 export { container };

@@ -35,7 +35,7 @@ export class Product {
   @Column({ default: 0 })
   stock: number;
 
-  @Column({ default: 'active' })
+  @Column({ type: 'varchar', default: 'active' })
   status: ProductStatus;
 
   @ManyToMany(() => Category, (category) => category.products, { cascade: ['insert', 'update'] })

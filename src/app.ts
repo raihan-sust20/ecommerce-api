@@ -6,7 +6,6 @@ import compression from 'compression';
 import passport from 'passport';
 import swaggerUi from 'swagger-ui-express';
 
-
 import { env } from './config/env.config';
 import { swaggerSpec } from './config/swagger.config';
 // import { jwtStrategy } from './components/auth/strategies/jwt.strategy';
@@ -21,6 +20,7 @@ import authRoutes from './components/auth/auth.routes';
 // import userRoutes from './components/user/user.routes';
 import productRoutes from './components/product/product.routes';
 import categoryRoutes from './components/category/category.routes';
+import orderRoutes from './components/order/order.routes';
 
 // Register dependencies
 import './shared/di/container';
@@ -75,7 +75,7 @@ export const createApp = (): Application => {
   // app.use(`${env.API_PREFIX}/users`, userRoutes);
   app.use(`${env.API_PREFIX}/products`, productRoutes);
   app.use(`${env.API_PREFIX}/categories`, categoryRoutes);
-  
+  app.use(`${env.API_PREFIX}/orders`, orderRoutes);
 
   // Error handling
   app.use(notFoundHandler);
