@@ -7,8 +7,10 @@ import {
   BeforeInsert,
   BeforeUpdate,
   Index,
+  OneToMany,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Order } from '../../order/entities/order.entity';
 
 export type UserRole = 'admin' | 'customer';
 
@@ -38,6 +40,10 @@ export class User {
 
   @Column({ name: 'is_active', default: true })
   isActive: boolean;
+
+  @Column()
+  @OneToMany(() => Order, (order: Order) => order.user)
+  orders: Order[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

@@ -10,3 +10,5 @@ export const PAGINATION = {
   DEFAULT_LIMIT: 10,
   MAX_LIMIT: 100,
 };
+
+export type SortOrder = 'ASC' | 'DESC';

@@ -11,8 +11,7 @@ import {
   JoinTable,
 } from 'typeorm';
 import { Category } from '../../category/entities/category.entity';
-
-export type ProductStatus = 'active' | 'inactive';
+import type { ProductStatus } from '../dtos/create-product.dto';
 
 @Entity('products')
 export class Product {
