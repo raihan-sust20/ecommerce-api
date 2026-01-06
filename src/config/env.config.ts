@@ -88,6 +88,25 @@ export class EnvironmentVariables {
   // Logging
   @IsIn(['error', 'warn', 'info', 'debug'])
   LOG_LEVEL: LogLevel = 'info';
+
+  @IsString()
+  STRIPE_SECRET_KEY: string;
+  @IsString()
+  STRIPE_PUBLISHABLE_KEY: string;
+
+  @IsString()
+  BKASH_BASE_URL: string;
+  @IsString()
+  BKASH_APP_KEY: string;
+  @IsString()
+  BKASH_APP_SECRET: string;
+  @IsString()
+  BKASH_USERNAME: string;
+  @IsString()
+  BKASH_PASSWORD: string;
+
+  @IsString()
+  APP_URL: string;
 }
 
 config();

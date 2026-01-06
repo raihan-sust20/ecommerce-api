@@ -23,7 +23,7 @@ export class OrderController {
   getOrders = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const query = req.query as unknown as GetOrdersQueryDto;
-      const requestUser = req.user;
+      const requestUser = req.user as Express.User;
 
       const page = query.page || PAGINATION.DEFAULT_PAGE;
       const limit = Math.min(query.limit || PAGINATION.DEFAULT_LIMIT, PAGINATION.MAX_LIMIT);

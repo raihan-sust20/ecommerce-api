@@ -21,6 +21,7 @@ import authRoutes from './components/auth/auth.routes';
 import productRoutes from './components/product/product.routes';
 import categoryRoutes from './components/category/category.routes';
 import orderRoutes from './components/order/order.routes';
+import paymentRoutes from './components/payment/payment.routes';
 
 // Register dependencies
 import './shared/di/container';
@@ -76,6 +77,7 @@ export const createApp = (): Application => {
   app.use(`${env.API_PREFIX}/products`, productRoutes);
   app.use(`${env.API_PREFIX}/categories`, categoryRoutes);
   app.use(`${env.API_PREFIX}/orders`, orderRoutes);
+  app.use(`${env.API_PREFIX}/payments`, paymentRoutes);
 
   // Error handling
   app.use(notFoundHandler);
