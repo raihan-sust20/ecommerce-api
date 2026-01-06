@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { injectable } from 'tsyringe';
-import { PaymentStrategy, PaymentResult } from './payment-strategy.interface';
+import { PaymentStrategy, PaymentResult, type VerifyPaymentParam } from './payment-strategy.interface';
 import { env } from '../../../config/env.config';
 import { logger } from '../../../shared/utils/logger.util';
 
@@ -86,7 +86,8 @@ export class BkashPaymentStrategy implements PaymentStrategy {
     }
   }
 
-  async verifyPayment(transactionId: string): Promise<PaymentResult> {
+  async verifyPayment(verifyPaymentParam: VerifyPaymentParam): Promise<PaymentResult> {
+    const { transactionId } = verifyPaymentParam;
     try {
       const token = await this.getToken();
 
@@ -117,7 +118,7 @@ export class BkashPaymentStrategy implements PaymentStrategy {
       logger.error('bKash verification error:', error);
       return {
         success: false,
-        transactionId,
+        transactionId: transactionId!,
         status: 'failed',
         rawResponse: { error: error.message },
         message: error.response?.data?.statusMessage || 'Payment verification failed',

@@ -45,6 +45,8 @@ export const createApp = (): Application => {
   // Rate limiting
   app.use(rateLimiter);
 
+  app.use('/api/v1/webhooks/stripe', express.raw({ type: 'application/json' }));
+
   // Body parsing
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));

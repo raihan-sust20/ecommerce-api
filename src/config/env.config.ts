@@ -93,6 +93,8 @@ export class EnvironmentVariables {
   STRIPE_SECRET_KEY: string;
   @IsString()
   STRIPE_PUBLISHABLE_KEY: string;
+  @IsString()
+  STRIPE_WEBHOOK_SECRET: string;
 
   @IsString()
   BKASH_BASE_URL: string;

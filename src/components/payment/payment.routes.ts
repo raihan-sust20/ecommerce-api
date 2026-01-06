@@ -309,4 +309,88 @@ router.get('/transaction/:transactionId', authenticate, paymentController.getPay
  */
 router.get('/order/:orderId', authenticate, paymentController.getPaymentsByOrderId);
 
+/**
+ * @swagger
+ * /api/v1/webhooks/stripe:
+ *   post:
+ *     tags: [Webhooks]
+ *     summary: Handle Stripe webhook events
+ *     description: |
+ *       Processes Stripe webhook events for payment status updates.
+ *       This endpoint is called by Stripe when payment events occur.
+ *       
+ *       Supported events:
+ *       - payment_intent.succeeded: Updates payment and order status to completed, reduces product stock
+ *       - payment_intent.payment_failed: Updates payment status to failed, keeps order pending for retry
+ *       - payment_intent.canceled: Updates payment status to failed and order status to canceled
+ *       
+ *       Security:
+ *       - Webhook signature verification using Stripe's recommended method
+ *       - No authentication required (verified via signature)
+ *       
+ *       IMPORTANT: This endpoint requires raw body parser. The body must be raw Buffer, not JSON parsed.
+ *     requestBody:
+ *       required: true
+ *       description: Stripe webhook event payload (automatically sent by Stripe)
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: string
+ *                 description: Unique identifier for the event
+ *               type:
+ *                 type: string
+ *                 description: Event type (e.g., payment_intent.succeeded)
+ *               data:
+ *                 type: object
+ *                 description: Event data containing the payment intent object
+ *                 properties:
+ *                   object:
+ *                     type: object
+ *                     description: The PaymentIntent object
+ *               livemode:
+ *                 type: boolean
+ *                 description: Whether this event is from live mode or test mode
+ *           example:
+ *             id: "evt_1OJqK2ABCDEFGHIJ12345678"
+ *             type: "payment_intent.succeeded"
+ *             data:
+ *               object:
+ *                 id: "pi_3OJqK2ABCDEFGHIJ1234567890"
+ *                 object: "payment_intent"
+ *                 amount: 29999
+ *                 currency: "usd"
+ *                 status: "succeeded"
+ *                 metadata:
+ *                   orderId: "550e8400-e29b-41d4-a716-446655440000"
+ *             livemode: false
+ *     parameters:
+ *       - in: header
+ *         name: stripe-signature
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Stripe webhook signature for verification
+ *         example: "t=1614556800,v1=5257a869e7ecebeda32affa62cdca3fa51cad7e77a0e56ff536d0ce8e108d8bd"
+ *     responses:
+ *       200:
+ *         description: Webhook received and processed successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: "Webhook processed successfully"
+ *               received: true
+ *       400:
+ *         description: Invalid webhook signature or missing signature header
+ *       404:
+ *         description: Payment or product not found
+ *       500:
+ *         description: Internal server error during webhook processing
+ */
+router.post('/stripe', paymentController.handleStripeWebhook);
+
+
 export default router;

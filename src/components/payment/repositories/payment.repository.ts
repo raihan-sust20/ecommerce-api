@@ -25,7 +25,7 @@ export class PaymentRepository {
       transactionId: data.transactionId,
       amount: data.amount,
       status: data.status,
-      raw_response: data.rawResponse,
+      rawResponse: data.rawResponse,
     });
 
     return this.repository.save(payment);
@@ -52,7 +52,7 @@ export class PaymentRepository {
   ): Promise<void> {
     const updateData: any = { status };
     if (rawResponse) {
-      updateData.raw_response = rawResponse;
+      updateData.rawResponse = rawResponse;
     }
 
     await this.repository.update({ transactionId: transactionId }, updateData);

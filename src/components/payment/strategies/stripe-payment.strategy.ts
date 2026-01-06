@@ -1,16 +1,22 @@
 import Stripe from 'stripe';
-import { injectable } from 'tsyringe';
-import { PaymentStrategy, PaymentResult } from './payment-strategy.interface';
+import { inject, injectable } from 'tsyringe';
+import {
+  PaymentStrategy,
+  PaymentResult,
+  type VerifyPaymentParam,
+} from './payment-strategy.interface';
 import { env } from '../../../config/env.config';
 import { logger } from '../../../shared/utils/logger.util';
+import type { PaymentStatus } from '../entities/payment.entity';
+import { PaymentService } from '../payment.service';
 
 @injectable()
 export class StripePaymentStrategy implements PaymentStrategy {
   private stripe: Stripe;
 
-  constructor() {
+  constructor(@inject(PaymentService) private paymentService: PaymentService) {
     this.stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-      apiVersion: '2024-11-20.acacia',
+      apiVersion: '2025-12-15.clover',
     });
   }
 
@@ -56,22 +62,83 @@ export class StripePaymentStrategy implements PaymentStrategy {
     }
   }
 
-  async verifyPayment(transactionId: string): Promise<PaymentResult> {
-    try {
-      const paymentIntent = await this.stripe.paymentIntents.retrieve(transactionId);
+  // async verifyPayment(transactionId: string): Promise<PaymentResult> {
+  //   try {
+  //     const paymentIntent = await this.stripe.paymentIntents.retrieve(transactionId);
 
-      return {
-        success: paymentIntent.status === 'succeeded',
-        transactionId: paymentIntent.id,
-        status: this.mapStripeStatus(paymentIntent.status),
-        rawResponse: paymentIntent,
-        message: `Payment ${paymentIntent.status}`,
-      };
+  //     return {
+  //       success: paymentIntent.status === 'succeeded',
+  //       transactionId: paymentIntent.id,
+  //       status: this.mapStripeStatus(paymentIntent.status),
+  //       rawResponse: paymentIntent,
+  //       message: `Payment ${paymentIntent.status}`,
+  //     };
+  //   } catch (error: any) {
+  //     logger.error('Stripe verification error:', error);
+  //     return {
+  //       success: false,
+  //       transactionId,
+  //       status: 'failed',
+  //       rawResponse: { error: error.message },
+  //       message: error.message || 'Payment verification failed',
+  //     };
+  //   }
+  // }
+
+  private async verifyWebhookSignature(
+    payload: string | Buffer,
+    signature: string
+  ): Promise<Stripe.Event> {
+    try {
+      const event = this.stripe.webhooks.constructEvent(
+        payload,
+        signature,
+        env.STRIPE_WEBHOOK_SECRET
+      );
+      return event;
+    } catch (error: any) {
+      logger.error('Webhook signature verification failed:', error.message);
+      throw new ValidationError(`Webhook signature verification failed: ${error.message}`);
+    }
+  }
+
+  private async handleStripeWebhook(event: Stripe.Event): Promise<void> {
+    logger.info(`Processing Stripe webhook: ${event.type}`);
+
+    switch (event.type) {
+      case 'payment_intent.succeeded':
+        await this.handlePaymentSucceeded(event);
+        break;
+
+      case 'payment_intent.payment_failed':
+        await this.handlePaymentFailed(event);
+        break;
+
+      case 'payment_intent.canceled':
+        await this.handlePaymentCanceled(event);
+        break;
+
+      default:
+        logger.warn(`Unhandled webhook event type: ${event.type}`);
+    }
+  }
+
+  async verifyPayment(verifyPaymentParam: VerifyPaymentParam): Promise<PaymentResult> {
+    const { req } = verifyPaymentParam;
+
+    try {
+      const { body, headers} = req!;
+      const signature = headers['stripe-signature'] as string;
+      // Verify webhook signature
+      const event = await this.verifyWebhookSignature(body, signature);
+
+      // Process webhook event
+      await this.handleStripeWebhook(event);
     } catch (error: any) {
       logger.error('Stripe verification error:', error);
       return {
         success: false,
-        transactionId,
+        transactionId: transactionId!,
         status: 'failed',
         rawResponse: { error: error.message },
         message: error.message || 'Payment verification failed',
@@ -112,9 +179,7 @@ export class StripePaymentStrategy implements PaymentStrategy {
     }
   }
 
-  private mapStripeStatus(
-    stripeStatus: string
-  ): PaymentStatus {
+  private mapStripeStatus(stripeStatus: string): PaymentStatus {
     switch (stripeStatus) {
       case 'succeeded':
         return 'completed';
@@ -128,6 +193,41 @@ export class StripePaymentStrategy implements PaymentStrategy {
         return 'failed';
       default:
         return 'pending';
+    }
+  }
+
+  async verifyWebhookSignature(payload: string | Buffer, signature: string): Promise<Stripe.Event> {
+    try {
+      const event = this.stripe.webhooks.constructEvent(
+        payload,
+        signature,
+        env.STRIPE_WEBHOOK_SECRET
+      );
+      return event;
+    } catch (error: any) {
+      logger.error('Webhook signature verification failed:', error.message);
+      throw new ValidationError(`Webhook signature verification failed: ${error.message}`);
+    }
+  }
+
+  async handleStripeWebhook(event: Stripe.Event): Promise<void> {
+    logger.info(`Processing Stripe webhook: ${event.type}`);
+
+    switch (event.type) {
+      case 'payment_intent.succeeded':
+        await this.handlePaymentSucceeded(event);
+        break;
+
+      case 'payment_intent.payment_failed':
+        await this.handlePaymentFailed(event);
+        break;
+
+      case 'payment_intent.canceled':
+        await this.handlePaymentCanceled(event);
+        break;
+
+      default:
+        logger.warn(`Unhandled webhook event type: ${event.type}`);
     }
   }
 }
