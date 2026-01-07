@@ -531,6 +531,70 @@ router.get('/', authenticate, orderController.getOrders);
 
 /**
  * @swagger
+ * /api/v1/orders/my-orders:
+ *   get:
+ *     tags: [Orders]
+ *     summary: Get current user's orders
+ *     description: Retrieve a paginated list of orders belonging to the authenticated user
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Page number for pagination
+ *         example: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         description: Number of orders per page
+ *         example: 10
+ *     responses:
+ *       200:
+ *         description: User orders retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "User orders retrieved successfully"
+ *                 data:
+ *                   $ref: '#/components/schemas/PaginatedOrders'
+ *       401:
+ *         description: Unauthorized - Missing or invalid authentication token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *               success: false
+ *               message: "Unauthorized"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *               success: false
+ *               message: "Internal server error"
+ */
+router.get('/my-orders', authenticate, orderController.getUserOrders);
+
+/**
+ * @swagger
  * /api/v1/orders/{id}:
  *   get:
  *     tags: [Orders]
@@ -619,69 +683,5 @@ router.get('/', authenticate, orderController.getOrders);
  *               message: "Internal server error"
  */
 router.get('/:id', authenticate, orderController.getOrderById);
-
-/**
- * @swagger
- * /api/v1/orders/my-orders:
- *   get:
- *     tags: [Orders]
- *     summary: Get current user's orders
- *     description: Retrieve a paginated list of orders belonging to the authenticated user
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *           minimum: 1
- *           default: 1
- *         description: Page number for pagination
- *         example: 1
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *           minimum: 1
- *           maximum: 100
- *           default: 10
- *         description: Number of orders per page
- *         example: 10
- *     responses:
- *       200:
- *         description: User orders retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: "User orders retrieved successfully"
- *                 data:
- *                   $ref: '#/components/schemas/PaginatedOrders'
- *       401:
- *         description: Unauthorized - Missing or invalid authentication token
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- *             example:
- *               success: false
- *               message: "Unauthorized"
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- *             example:
- *               success: false
- *               message: "Internal server error"
- */
-router.get('/my-orders', authenticate, orderController.getUserOrders);
 
 export default router;

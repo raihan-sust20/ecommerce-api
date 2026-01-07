@@ -3,6 +3,7 @@ import { Repository, DataSource, type EntityManager } from 'typeorm';
 import { AppDataSource } from '../../../config/database.config';
 import { Order, type OrderStatus } from '../entities/order.entity';
 import { OrderItem } from '../entities/order-item.entity';
+import { logger } from '../../../shared/utils/logger.util';
 
 export interface OrderFilters {
   status?: OrderStatus;
@@ -63,6 +64,7 @@ export class OrderRepository {
   }
 
   async findByUserId(userId: string, skip: number, take: number): Promise<[Order[], number]> {
+    logger.log('userId: ', userId);
     return this.orderRepo.findAndCount({
       where: { user_id: userId },
       relations: ['items', 'items.product'],
@@ -72,11 +74,7 @@ export class OrderRepository {
     });
   }
 
-  async findAll(
-    skip: number,
-    take: number,
-    filters?: OrderFilters
-  ): Promise<[Order[], number]> {
+  async findAll(skip: number, take: number, filters?: OrderFilters): Promise<[Order[], number]> {
     const query = this.orderRepo
       .createQueryBuilder('order')
       .leftJoinAndSelect('order.user', 'user')

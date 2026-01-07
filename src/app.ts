@@ -32,18 +32,18 @@ export const createApp = (): Application => {
 
   // Security middleware
   app.use(helmet());
-  app.use(
-    cors({
-      origin: env.CORS_ORIGIN,
-      credentials: true,
-    })
-  );
+  // app.use(
+  //   cors({
+  //     origin: env.CORS_ORIGIN,
+  //     credentials: true,
+  //   })
+  // );
 
   // Compression
   app.use(compression());
 
   // Rate limiting
-  app.use(rateLimiter);
+  // app.use(rateLimiter);
 
   app.use('/api/v1/webhooks/stripe', express.raw({ type: 'application/json' }));
 

@@ -229,7 +229,7 @@ router.post(
  *               success: false
  *               message: "Internal server error"
  */
-router.post('/verify/:transactionId', authenticate, paymentController.verifyPayment);
+// router.post('/verify/:transactionId', authenticate, paymentController.verifyPayment);
 
 /**
  * @swagger

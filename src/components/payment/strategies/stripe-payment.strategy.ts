@@ -8,14 +8,13 @@ import {
 import { env } from '../../../config/env.config';
 import { logger } from '../../../shared/utils/logger.util';
 import type { PaymentStatus } from '../entities/payment.entity';
-import { PaymentService } from '../payment.service';
 import { ValidationError } from '../../../shared/errors/app-error';
 
 @injectable()
 export class StripePaymentStrategy implements PaymentStrategy {
   private stripe: Stripe;
 
-  constructor(@inject(PaymentService) private paymentService: PaymentService) {
+  constructor() {
     this.stripe = new Stripe(env.STRIPE_SECRET_KEY, {
       apiVersion: '2025-12-15.clover',
     });
