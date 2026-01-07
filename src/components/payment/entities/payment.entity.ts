@@ -11,7 +11,7 @@ import {
 import { Order } from '../../order/entities/order.entity';
 
 export type PaymentProvider = 'stripe' | 'bkash';
-export type PaymentStatus = 'pending' | 'completed' | 'failed';
+export type PaymentStatus = 'pending' | 'completed' | 'failed' | 'canceled';
 
 @Entity('payments')
 export class Payment {

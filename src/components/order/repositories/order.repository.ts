@@ -1,5 +1,5 @@
 import { injectable } from 'tsyringe';
-import { Repository, DataSource } from 'typeorm';
+import { Repository, DataSource, type EntityManager } from 'typeorm';
 import { AppDataSource } from '../../../config/database.config';
 import { Order, type OrderStatus } from '../entities/order.entity';
 import { OrderItem } from '../entities/order-item.entity';
@@ -26,7 +26,7 @@ export class OrderRepository {
     totalAmount: string,
     items: Array<{ product_id: string; price: string; quantity: number; subtotal: string }>
   ): Promise<Order> {
-    return await this.dataSource.transaction(async (manager) => {
+    return await this.dataSource.transaction(async (manager: EntityManager) => {
       // Create order
       const order = manager.create(Order, {
         user_id: userId,

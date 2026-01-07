@@ -8,8 +8,8 @@ export class OrderItem {
   id: string;
 
   // FK → orders.id
-  @Column({ type: 'uuid' })
-  order_id: string;
+  @Column({ name: 'order_id', type: 'uuid' })
+  orderId: string;
 
   @ManyToOne(() => Order, (order) => order.items, {
     onDelete: 'CASCADE',
@@ -22,8 +22,8 @@ export class OrderItem {
   order: Order;
 
   // FK → products.id
-  @Column({ type: 'uuid' })
-  product_id: string;
+  @Column({ name: 'product_id', type: 'uuid' })
+  productId: string;
 
   @ManyToOne(() => Product, {
     onDelete: 'RESTRICT',
