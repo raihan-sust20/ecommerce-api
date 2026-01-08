@@ -31,19 +31,26 @@ export const createApp = (): Application => {
   const app = express();
 
   // Security middleware
+  app.use(
+    cors({
+      origin: env.CORS_ORIGIN.trim().split(','),
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      credentials: true,
+      // allowedHeaders: ['Content-Type', 'Authorization'],
+    })
+  );
+
+  app.options('/', cors()); // handle preflight requests
   app.use(helmet());
-  // app.use(
-  //   cors({
-  //     origin: env.CORS_ORIGIN,
-  //     credentials: true,
-  //   })
-  // );
+
+  // If behind a proxy (e.g., Heroku, Nginx), trust the proxy
+  app.set('trust proxy', 1);
 
   // Compression
   app.use(compression());
 
   // Rate limiting
-  // app.use(rateLimiter);
+  app.use(rateLimiter);
 
   app.use('/api/v1/webhooks/stripe', express.raw({ type: 'application/json' }));
 
