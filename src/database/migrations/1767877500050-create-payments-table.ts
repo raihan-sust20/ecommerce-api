@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner, Table, TableForeignKey, TableIndex } from 'typeorm';
 
-export class CreatePaymentsTable1767888058923 implements MigrationInterface {
-  name = 'CreatePaymentsTable1767888058923';
+export class CreatePaymentsTable1767877500050 implements MigrationInterface {
+  name = 'CreatePaymentsTable1767877500050';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);

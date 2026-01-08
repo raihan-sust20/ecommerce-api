@@ -6,8 +6,8 @@ import {
   TableIndex,
 } from 'typeorm';
 
-export class CreateOrdersTable1704722600000 implements MigrationInterface {
-  name = 'CreateOrdersTable1704722600000';
+export class CreateOrdersTable1767877500030 implements MigrationInterface {
+  name = 'CreateOrdersTable1767877500030';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(

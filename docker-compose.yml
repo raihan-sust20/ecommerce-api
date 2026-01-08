@@ -12,6 +12,8 @@ services:
     depends_on:
       - postgres
       - redis
+    networks:
+      - ecommerce-network
     volumes:
       - ./logs:/app/logs
 

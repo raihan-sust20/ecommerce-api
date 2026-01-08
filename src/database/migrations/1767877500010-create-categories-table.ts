@@ -6,10 +6,10 @@ import {
   TableIndex,
 } from 'typeorm';
 
-export class CreateCategoriesTable1767883785689
+export class CreateCategoriesTable1767877500010
   implements MigrationInterface
 {
-  name = 'CreateCategoriesTable1767883785689';
+  name = 'CreateCategoriesTable1767877500010';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(

@@ -6,10 +6,10 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export class CreateProductsAndProductCategoriesTables1767884437743
+export class CreateProductsAndProductCategoriesTables1767877500020
   implements MigrationInterface
 {
-  name = 'CreateProductsAndProductCategoriesTables1767884437743';
+  name = 'CreateProductsAndProductCategoriesTables1767877500020';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     /**
