@@ -4,6 +4,8 @@ import { PaymentService } from './payment.service';
 import { ResponseUtil } from '../../shared/utils/response.util';
 import { logger } from '../../shared/utils/logger.util';
 import { StripePaymentStrategy } from './strategies/stripe-payment.strategy';
+import { ValidationError } from 'class-validator';
+import { formatValidationErrors } from '../../shared/middleware/validation.middleware';
 
 @injectable()
 export class PaymentController {

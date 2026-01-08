@@ -19,6 +19,9 @@ export class PaymentService {
   ) {}
 
   async processPayment(data: ProcessPaymentDto): Promise<Payment> {
+    if (data.provider === 'bkash') {
+      throw new ValidationError('Bkash payment provider is currently not supported.');
+    }
     // 1. Verify order exists and is in correct state
     const order = await this.orderRepository.findById(data.orderId);
     if (!order) {
