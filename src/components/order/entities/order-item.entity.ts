@@ -1,7 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { Order } from './order.entity';
 import { Product } from '../../product/entities/product.entity';
 
+@Index(['orderId', 'productId'], { unique: true })
 @Entity('order_items')
 export class OrderItem {
   @PrimaryGeneratedColumn('uuid')
@@ -9,6 +10,7 @@ export class OrderItem {
 
   // FK → orders.id
   @Column({ name: 'order_id', type: 'uuid' })
+  @Index('idx_order_items_order_id')
   orderId: string;
 
   @ManyToOne(() => Order, (order) => order.items, {
@@ -23,6 +25,7 @@ export class OrderItem {
 
   // FK → products.id
   @Column({ name: 'product_id', type: 'uuid' })
+  @Index('idx_order_items_product_id')
   productId: string;
 
   @ManyToOne(() => Product, {

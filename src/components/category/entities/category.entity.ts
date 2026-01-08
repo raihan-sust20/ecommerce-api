@@ -21,6 +21,7 @@ export class Category {
   name: string;
 
   @Column()
+  @Index('idx_categories_slug')
   slug: string; // SEO-friendly URL part
 
   @Column({ type: 'text', nullable: true })

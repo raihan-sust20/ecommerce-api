@@ -7,6 +7,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  Index,
 } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { OrderItem } from './order-item.entity';
@@ -20,6 +21,7 @@ export class Order {
 
   // FK → users.id
   @Column({ type: 'uuid' })
+  @Index('idx_orders_user_id')
   user_id: string;
 
   @ManyToOne(() => User, (user: User) => user.orders, {
