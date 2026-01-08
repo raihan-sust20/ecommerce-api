@@ -7,6 +7,7 @@ import { OrderItem } from '../../order/entities/order-item.entity';
 import { Product } from '../../product/entities/product.entity';
 import { logger } from '../../../shared/utils/logger.util';
 import { AppError, NotFoundError } from '../../../shared/errors/app-error';
+import { log } from 'node:console';
 
 @injectable()
 export class PaymentRepository {
@@ -97,10 +98,6 @@ export class PaymentRepository {
     );
   }
 
-  // async updateOrderStatus(orderId: string, status: 'pending' | 'paid' | 'canceled'): Promise<void> {
-  //   await this.orderRepository.update({ id: orderId }, { status });
-  // }
-
   async reduceProductStock(
     productId: string,
     quantity: number,
@@ -126,16 +123,6 @@ export class PaymentRepository {
       select: { stock: true },
     });
     return product ? product.stock : null;
-  }
-
-  async updateOrderByPaymentStatus(
-    transactionalEntityManager: EntityManager,
-    transactionId: string
-  ): Promise<void> {
-    const transactionalPaymentRepo = transactionalEntityManager.getRepository(Payment);
-    const transactionalOrderRepo = transactionalEntityManager.getRepository(Order);
-    const transactionalOrderItemRepo = transactionalEntityManager.getRepository(OrderItem);
-    const transactionalProductRepo = transactionalEntityManager.getRepository(Product);
   }
 
   async updateDbOnPaymentSucceed(
@@ -175,6 +162,10 @@ export class PaymentRepository {
       // 4. Update order status
       await transactionalOrderRepo.update({ id: payment.orderId }, { status: 'paid' });
 
+      log(`Order ${payment.orderId} marked as paid`);
+
+      log('payment.order.items:', payment.order?.items);
+
       // 5. Reduce product stock for each order item
       if (payment.order && payment.order.items) {
         for (const item of payment.order.items) {
@@ -192,7 +183,11 @@ export class PaymentRepository {
             throw new AppError(`Insufficient stock for product ${item.productId}`, 400);
           }
 
+          log(`Reducing stock for product ${item.productId} by ${item.quantity} units`);
+
           await this.reduceProductStock(item.productId, item.quantity, transactionalProductRepo);
+
+          log(`Reduced stock for product ${item.productId} by ${item.quantity} units`);
 
           logger.info(`Reduced stock for product ${item.productId} by ${item.quantity} units`);
         }

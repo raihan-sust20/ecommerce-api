@@ -52,7 +52,7 @@ export const createApp = (): Application => {
   // Rate limiting
   app.use(rateLimiter);
 
-  app.use('/api/v1/webhooks/stripe', express.raw({ type: 'application/json' }));
+  app.use('/api/v1/payments/webhooks/stripe', express.raw({ type: 'application/json' }));
 
   // Body parsing
   app.use(express.json({ limit: '10mb' }));

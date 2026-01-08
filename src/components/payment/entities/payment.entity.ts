@@ -26,7 +26,7 @@ export class Payment {
     onDelete: 'RESTRICT',
   })
   @JoinColumn({
-    name: 'orderId',
+    name: 'order_id',
     referencedColumnName: 'id',
     foreignKeyConstraintName: 'fk_payments_order_id',
   })

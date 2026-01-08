@@ -42,13 +42,15 @@ export class OrderRepository {
       // Create order items
       const orderItems = items.map((item) =>
         manager.create(OrderItem, {
-          order_id: savedOrder.id,
-          product_id: item.product_id,
+          orderId: savedOrder.id,
+          productId: item.product_id,
           price: item.price,
           quantity: item.quantity,
           subtotal: item.subtotal,
         })
       );
+
+      log('Order Items to be saved: ', JSON.stringify(orderItems, null, 2));
       await manager.save(OrderItem, orderItems);
 
       // Load order with relations
