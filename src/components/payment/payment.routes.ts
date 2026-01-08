@@ -311,7 +311,7 @@ router.get('/order/:orderId', authenticate, paymentController.getPaymentsByOrder
 
 /**
  * @swagger
- * /api/v1/webhooks/stripe:
+ * /api/v1/payments/webhooks/stripe:
  *   post:
  *     tags: [Webhooks]
  *     summary: Handle Stripe webhook events
@@ -390,7 +390,7 @@ router.get('/order/:orderId', authenticate, paymentController.getPaymentsByOrder
  *       500:
  *         description: Internal server error during webhook processing
  */
-router.post('/stripe', paymentController.handleStripeWebhook);
+router.post('/webhooks/stripe', paymentController.handleStripeWebhook);
 
 
 export default router;

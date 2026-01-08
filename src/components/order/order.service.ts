@@ -22,6 +22,7 @@ export class OrderService {
   ) {}
 
   async createOrder(userId: string, data: CreateOrderDto): Promise<OrderCreationResult> {
+    console.log('Creating order for user:', userId);
     // Validate all products exist and are active
     await this.validateProducts(data.items);
 
@@ -51,6 +52,7 @@ export class OrderService {
   }
 
   private async validateProducts(items: CreateOrderItemDto[]): Promise<void> {
+    console.log('Validating products...');
     const productIds = items.map((item) => item.product_id);
     const uniqueProductIds = [...new Set(productIds)];
 

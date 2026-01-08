@@ -4,6 +4,7 @@ import { AppDataSource } from '../../../config/database.config';
 import { Order, type OrderStatus } from '../entities/order.entity';
 import { OrderItem } from '../entities/order-item.entity';
 import { logger } from '../../../shared/utils/logger.util';
+import { log } from 'node:console';
 
 export interface OrderFilters {
   status?: OrderStatus;
@@ -36,6 +37,8 @@ export class OrderRepository {
       });
       const savedOrder = await manager.save(Order, order);
 
+      log('Saved Order: ', savedOrder);
+
       // Create order items
       const orderItems = items.map((item) =>
         manager.create(OrderItem, {
@@ -49,10 +52,12 @@ export class OrderRepository {
       await manager.save(OrderItem, orderItems);
 
       // Load order with relations
-      return (await manager.findOne(Order, {
+      const newOrder = await manager.findOne(Order, {
         where: { id: savedOrder.id },
         relations: { items: { product: true } },
-      })) as Order;
+      });
+
+      return newOrder as Order;
     });
   }
 

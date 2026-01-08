@@ -2,6 +2,7 @@ import { Strategy as JwtStrategy, ExtractJwt, StrategyOptions } from 'passport-j
 import { container } from 'tsyringe';
 import { UserRepository } from '../../user/repositories/user.repository';
 import { env } from '../../../config/env.config';
+import { logger } from '../../../shared/utils/logger.util';
 
 const options: StrategyOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -23,6 +24,7 @@ export const jwtStrategy = new JwtStrategy(options, async (payload, done) => {
       role: user.role,
     });
   } catch (error) {
+    logger.error('JWT Strategy Error:', JSON.stringify(error));
     return done(error, false);
   }
 });
