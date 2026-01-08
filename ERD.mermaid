@@ -1,0 +1,81 @@
+erDiagram
+    USERS {
+        id uuid PK
+        email varchar
+        password varchar
+        first_name varchar
+        last_name varchar
+        role varchar
+        is_active boolean
+        created_at timestamp
+        updated_at timestamp
+    }
+
+    ORDERS {
+        id uuid PK
+        user_id uuid FK
+        total_amount decimal
+        status varchar
+        created_at timestamp
+        updated_at timestamp
+    }
+
+    ORDER_ITEMS {
+        id uuid PK
+        order_id uuid FK
+        product_id uuid FK
+        price decimal
+        quantity int
+        subtotal decimal
+    }
+
+    PAYMENTS {
+        id uuid PK
+        order_id uuid FK
+        provider varchar
+        transaction_id varchar
+        status varchar
+        amount decimal
+        raw_response jsonb
+        created_at timestamp
+        updated_at timestamp
+    }
+
+    CATEGORIES {
+        id uuid PK
+        name varchar
+        slug varchar
+        description text
+        parent_id uuid FK
+        is_active boolean
+        path varchar
+        created_at timestamp
+        updated_at timestamp
+    }
+
+    PRODUCTS {
+        id uuid PK
+        sku varchar
+        name varchar
+        description text
+        price decimal
+        stock int
+        status varchar
+        created_at timestamp
+        updated_at timestamp
+    }
+
+    PRODUCT_CATEGORIES {
+        product_id uuid FK
+        category_id uuid FK
+    }
+
+    USERS ||--o{ ORDERS : places
+    ORDERS ||--o{ ORDER_ITEMS : contains
+    PRODUCTS ||--o{ ORDER_ITEMS : ordered_in
+    ORDERS ||--o{ PAYMENTS : has
+
+    CATEGORIES ||--o{ CATEGORIES : parent_child
+
+    PRODUCTS ||--o{ PRODUCT_CATEGORIES : categorized_in
+    CATEGORIES ||--o{ PRODUCT_CATEGORIES : includes

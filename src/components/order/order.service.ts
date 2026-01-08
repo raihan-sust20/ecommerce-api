@@ -1,10 +1,13 @@
 import { injectable, inject } from 'tsyringe';
-import { OrderRepository } from './repositories/order.repository';
+import { OrderRepository, type OrderFilters } from './repositories/order.repository';
 import { ProductRepository } from '../product/repositories/product.repository';
 import { Order } from './entities/order.entity';
 import { CreateOrderDto, CreateOrderItemDto } from './dtos/create-order.dto';
 import { ValidationError, NotFoundError } from '../../shared/errors/app-error';
 import Big from 'big.js';
+import { PaginationUtil, type PaginatedResult } from '../../shared/utils/pagination.util';
+import { cacheService } from '../../shared/utils/cache.util';
+import { CACHE_TTL } from '../../shared/constants';
 
 interface OrderCreationResult {
   order: Order;
@@ -19,6 +22,7 @@ export class OrderService {
   ) {}
 
   async createOrder(userId: string, data: CreateOrderDto): Promise<OrderCreationResult> {
+    console.log('Creating order for user:', userId);
     // Validate all products exist and are active
     await this.validateProducts(data.items);
 
@@ -48,6 +52,7 @@ export class OrderService {
   }
 
   private async validateProducts(items: CreateOrderItemDto[]): Promise<void> {
+    console.log('Validating products...');
     const productIds = items.map((item) => item.product_id);
     const uniqueProductIds = [...new Set(productIds)];
 
@@ -134,18 +139,71 @@ export class OrderService {
       .toFixed(2);
   }
 
-  async getOrderById(orderId: string, userId: string): Promise<Order> {
-    const order = await this.orderRepository.findById(orderId);
+  async getOrders(
+    requestUser: Express.User,
+    page: number,
+    limit: number,
+    filters?: OrderFilters
+  ): Promise<PaginatedResult<Order>> {
+    if (requestUser.role === 'customer') {
+      if (!filters?.userId) {
+        filters = { ...filters, userId: requestUser.id };
+      }
 
+      else if (filters.userId !== requestUser.id) {
+        throw new ValidationError('Customers can only access their own orders');
+      }
+    }
+
+    const cacheKey = `orders:list:${page}:${limit}:${filters?.status || 'all'}:${
+      filters?.userId || 'all'
+    }`;
+    const cached = await cacheService.get<PaginatedResult<Order>>(cacheKey);
+
+    if (cached) {
+      return cached;
+    }
+
+    const { skip, take } = PaginationUtil.getSkipTake(page, limit);
+    const [orders, total] = await this.orderRepository.findAll(skip, take, filters);
+
+    const result = PaginationUtil.paginate(orders, total, page, limit);
+    await cacheService.set(cacheKey, result, CACHE_TTL.SHORT);
+
+    return result;
+  }
+
+  async getOrderById(id: string): Promise<Order> {
+    const cacheKey = `order:${id}`;
+    const cached = await cacheService.get<Order>(cacheKey);
+
+    if (cached) {
+      return cached;
+    }
+
+    const order = await this.orderRepository.findById(id);
     if (!order) {
       throw new NotFoundError('Order not found');
     }
 
-    // Ensure user can only access their own orders
-    if (order.user_id !== userId) {
-      throw new NotFoundError('Order not found');
+    await cacheService.set(cacheKey, order, CACHE_TTL.SHORT);
+    return order;
+  }
+
+  async getUserOrders(userId: string, page: number, limit: number): Promise<PaginatedResult<Order>> {
+    const cacheKey = `orders:user:${userId}:${page}:${limit}`;
+    const cached = await cacheService.get<PaginatedResult<Order>>(cacheKey);
+
+    if (cached) {
+      return cached;
     }
 
-    return order;
+    const { skip, take } = PaginationUtil.getSkipTake(page, limit);
+    const [orders, total] = await this.orderRepository.findByUserId(userId, skip, take);
+
+    const result = PaginationUtil.paginate(orders, total, page, limit);
+    await cacheService.set(cacheKey, result, CACHE_TTL.SHORT);
+
+    return result;
   }
 }

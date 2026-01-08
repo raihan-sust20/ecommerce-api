@@ -11,9 +11,7 @@ import {
 import { User } from '../../user/entities/user.entity';
 import { OrderItem } from './order-item.entity';
 
-
 export type OrderStatus = 'pending' | 'paid' | 'canceled';
-
 
 @Entity('orders')
 export class Order {
@@ -43,7 +41,6 @@ export class Order {
 
   @OneToMany(() => OrderItem, (item: OrderItem) => item.order)
   items: OrderItem[];
-
 
   @CreateDateColumn({ name: 'created_at' })
   created_at: Date;
