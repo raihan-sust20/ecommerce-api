@@ -20,6 +20,7 @@ export class Payment {
 
   // FK → orders.id
   @Column({ name: 'order_id', type: 'uuid' })
+  // @Index('idx_payments_order_id')
   orderId: string;
 
   @ManyToOne(() => Order, {
@@ -35,8 +36,8 @@ export class Payment {
   @Column()
   provider: PaymentProvider;
 
-  @Column({ name: 'transaction_id', unique: true })
-  @Index('idx_transaction_id')
+  @Column({ name: 'transaction_id' })
+  @Index('idx_transaction_id', { unique: true })
   transactionId: string;
 
   @Column({

@@ -506,6 +506,85 @@ router.patch(
   productController.updateProduct
 );
 
+/**
+ * @swagger
+ * /api/v1/products/{id}:
+ *   get:
+ *     tags: [Products]
+ *     summary: Get product by ID
+ *     description: Retrieves a single product by its UUID with all associated categories. Results are cached for improved performance.
+ *     
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Product UUID
+ *         example: "8d0e7680-8536-51ef-055c-f18gd2g01bf8"
+ *     
+ *     responses:
+ *       200:
+ *         description: Product retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Success"
+ *                 data:
+ *                   $ref: '#/components/schemas/Product'
+ *             example:
+ *               success: true
+ *               message: "Success"
+ *               data:
+ *                 id: "8d0e7680-8536-51ef-055c-f18gd2g01bf8"
+ *                 sku: "IPHONE-15-PRO-256"
+ *                 name: "iPhone 15 Pro 256GB"
+ *                 description: "Latest iPhone with A17 Pro chip, titanium design, and advanced camera system"
+ *                 price: 999.99
+ *                 stock: 50
+ *                 status: "active"
+ *                 categories:
+ *                   - id: "550e8400-e29b-41d4-a716-446655440000"
+ *                     name: "Electronics"
+ *                     slug: "electronics"
+ *                   - id: "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+ *                     name: "Smartphones"
+ *                     slug: "smartphones"
+ *                 createdAt: "2024-01-15T10:30:00.000Z"
+ *                 updatedAt: "2024-01-15T10:30:00.000Z"
+ *       
+ *       400:
+ *         description: Invalid UUID format
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: "Invalid UUID format"
+ *       
+ *       404:
+ *         description: Product not found
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: "Product with ID '8d0e7680-8536-51ef-055c-f18gd2g01bf8' not found"
+ *       
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: "Internal server error"
+ */
 router.get('/:id', productController.getProductById);
 
 /**

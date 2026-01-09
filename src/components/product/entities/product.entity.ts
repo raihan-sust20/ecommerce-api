@@ -23,7 +23,6 @@ export class Product {
   sku: string;
 
   @Column()
-  @Index('product_name_index')
   name: string;
 
   @Column({ name: 'text' })

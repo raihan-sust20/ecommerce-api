@@ -19,8 +19,8 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ unique: true })
-  @Index('user_email_index')
+  @Column()
+  @Index('user_email_index', { unique: true })
   email: string;
 
   @Column()
@@ -29,7 +29,7 @@ export class User {
   @Column({ name: 'first_name' })
   firstName: string;
 
-  @Column({ name: 'lst_name' })
+  @Column({ name: 'last_name' })
   lastName: string;
 
   @Column({
