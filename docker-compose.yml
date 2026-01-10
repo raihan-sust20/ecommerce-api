@@ -39,7 +39,7 @@ services:
 
   redis:
     image: redis:8-alpine
-    container_name: redis
+    container_name: ecommerce-redis
     ports:
       - '6379:6379'
     networks:
