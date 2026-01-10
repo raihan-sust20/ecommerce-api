@@ -34,13 +34,11 @@ const transports: winston.transport[] = [
   }),
 ];
 
-if (env.NODE_ENV !== 'production') {
-  transports.push(
-    new winston.transports.Console({
-      format: consoleFormat,
-    })
-  );
-}
+transports.push(
+  new winston.transports.Console({
+    format: consoleFormat,
+  })
+);
 
 export const logger = winston.createLogger({
   level: env.LOG_LEVEL,
