@@ -1,0 +1,23 @@
+---
+config:
+  theme: redux
+---
+flowchart TB
+ subgraph s1["Frontend"]
+        n1["Collect Payment Details (Through Stirpe JS Elements)"]
+        n2["Confirm Payment"]
+        n3["Payment Complete"]
+  end
+    A(["Start"]) --> B["Place Order"]
+    B --> C["Create Payment Intent"]
+    C --> n1
+    n1 --> n2
+    n2 --> n3
+    n3 --> n4["Untitled Node"]
+
+    n1@{ shape: rounded}
+    n2@{ shape: rounded}
+    n3@{ shape: rounded}
+    B@{ shape: rounded}
+    C@{ shape: rounded}
+    n4@{ shape: fr-circ}

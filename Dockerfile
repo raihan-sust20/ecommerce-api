@@ -30,11 +30,11 @@ RUN chown -R node:node /app
 USER node
 
 # Copy package files and install production deps
-COPY --chown=app:app package*.json ./
+COPY --chown=node:node package*.json ./
 RUN npm ci --omit=dev
 
 # Copy built code from builder
-COPY --from=builder --chown=app:app /app/dist ./dist
+COPY --from=builder --chown=node:node /app/dist ./dist
 
 # Expose API port
 EXPOSE 5001

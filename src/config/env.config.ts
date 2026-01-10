@@ -111,7 +111,7 @@ export class EnvironmentVariables {
   APP_URL: string;
 }
 
-config();
+// config();
 
 const validateEnv = (): EnvironmentVariables => {
   const env = plainToInstance(EnvironmentVariables, process.env, {

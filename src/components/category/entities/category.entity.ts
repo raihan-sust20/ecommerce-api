@@ -8,6 +8,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToMany,
+  JoinColumn,
 } from 'typeorm';
 import { Product } from '../../product/entities/product.entity';
 
@@ -20,6 +21,9 @@ export class Category {
   @Column()
   name: string;
 
+  @Column({ name: 'parent_id', nullable: true })
+  parentId: string | null;
+
   @Column()
   @Index('idx_categories_slug')
   slug: string; // SEO-friendly URL part
@@ -31,6 +35,11 @@ export class Category {
   @ManyToOne(() => Category, (category) => category.children, {
     nullable: true,
     onDelete: 'RESTRICT', // blocks delete if children exist
+  })
+  @JoinColumn({
+    name: 'parent_id',
+    referencedColumnName: 'id',
+    foreignKeyConstraintName: 'fk_categories_parent_id',
   })
   parent?: Category | null;
 

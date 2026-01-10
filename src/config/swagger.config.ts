@@ -1,8 +1,12 @@
 import swaggerJsdoc from 'swagger-jsdoc';
 import { env } from './env.config';
+import path from 'node:path';
 
-const SERVER_URL =
-  env.APP_URL ?? `http://localhost:${env.PORT}`;
+const SERVER_URL = env.APP_URL ?? `http://localhost:${env.PORT}`;
+const API_PATHS =
+  env.NODE_ENV === 'development'
+    ? [path.join(process.cwd(), 'src/components/**/*.routes.ts')]
+    : [path.join(process.cwd(), 'dist/components/**/*.routes.js')];
 
 const options: swaggerJsdoc.Options = {
   definition: {
@@ -13,7 +17,7 @@ const options: swaggerJsdoc.Options = {
       description: 'E-commerce REST API documentation',
       contact: {
         name: 'API Support',
-        email: 'support@example.com',
+        email: 'raihan.sust20@gmail.com',
       },
     },
     servers: [
@@ -37,7 +41,7 @@ const options: swaggerJsdoc.Options = {
       },
     ],
   },
-  apis: ['./src/components/**/*.routes.ts'],
+  apis: API_PATHS,
 };
 
 export const swaggerSpec = swaggerJsdoc(options);

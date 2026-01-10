@@ -1,26 +1,28 @@
 import { createClient } from 'redis';
 import { env } from './env.config';
 import { logger } from '../shared/utils/logger.util';
+import { log } from 'node:console';
+
+log('redis host:', env.REDIS_HOST);
+log('redis port:', env.REDIS_PORT);
 
 export const redisClient = createClient({
-  socket: {
-    host: env.REDIS_HOST,
-    port: env.REDIS_PORT,
-  },
+  // socket: {
+  //   host: env.REDIS_HOST,
+  //   port: env.REDIS_PORT,
+  // },
+  url: `redis://${env.REDIS_HOST}:${env.REDIS_PORT}`,
 });
 
 redisClient.on('error', (err) => {
   logger.error('❌ Redis Client Error', err);
 });
 
-// redisClient.on('ready', () => {
-//   logger.info('✅ Redis connected successfully');
-// });
-
 export const initializeRedis = async (): Promise<void> => {
+  log('redis host:', env.REDIS_HOST);
+  log('redis port:', env.REDIS_PORT);
   try {
     if (!redisClient.isOpen) {
-      console.log('Redis host: ', env.REDIS_HOST, 'redis port: ', env.REDIS_PORT);
       await redisClient.connect();
     }
 
