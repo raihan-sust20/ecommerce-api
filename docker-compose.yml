@@ -19,6 +19,7 @@ services:
 
   postgres:
     image: postgres:18-alpine
+    hostname: postgres
     container_name: ecommerce-postgres
     environment:
       POSTGRES_USER: postgres
@@ -39,6 +40,7 @@ services:
 
   redis:
     image: redis:8-alpine
+    hostname: redis
     container_name: ecommerce-redis
     ports:
       - '6379:6379'

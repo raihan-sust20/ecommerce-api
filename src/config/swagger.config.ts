@@ -5,8 +5,8 @@ import path from 'node:path';
 const SERVER_URL = env.APP_URL ?? `http://localhost:${env.PORT}`;
 const API_PATHS =
   env.NODE_ENV === 'development'
-    ? ['./src/components/**/*.routes.ts']
-    : ['./dist/components/**/*.routes.js'];
+    ? [path.join(process.cwd(), 'src/components/**/*.routes.ts')]
+    : [path.join(process.cwd(), 'dist/components/**/*.routes.js')];
 
 const options: swaggerJsdoc.Options = {
   definition: {
@@ -41,7 +41,7 @@ const options: swaggerJsdoc.Options = {
       },
     ],
   },
-  apis: [path.join(__dirname, '../components/**/*.routes.*')]
+  apis: API_PATHS,
 };
 
 export const swaggerSpec = swaggerJsdoc(options);
