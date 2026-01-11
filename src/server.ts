@@ -1,4 +1,3 @@
-import './config/load-env.config';
 import { createApp } from './app';
 import { env } from './config/env.config';
 import { logger } from './shared/utils/logger.util';
