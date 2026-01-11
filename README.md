@@ -8,10 +8,10 @@ An **E-Commerce REST API** with authentication, product management, orders, paym
 
 **Swagger API Documentation**
 
-* Primary Swagger UI: [Ngrok](https://444ccd260063.ngrok-free.app/api-dics)
+* Primary Swagger UI: [Ngrok](https://1774f5e01c3d.ngrok-free.app/api-dics)
   *Note: This endpoint may not always be available due to resource limitations.*
 
-* Secondary Swagger UI (Render deployment): [Render](https://ecommerce-api-p9om.onrender.com)
+* Secondary Swagger UI (Render deployment): [Render](https://ecommerce-api-p9om.onrender.com/api-docs)
   *Note: As this is a free-tier deployment, the first request may take a few seconds while the server spins up.*
 
 **Frontend Application**
